@@ -12,6 +12,14 @@ yarn dev
 pnpm dev
 ```
 
+# directus
+
+```
+email: admin@admin.com
+password: admin1429
+key: 106a2b12-8d33-479d-9f80-98ad02fd2f8a
+secret: JRkAxyzbR6BVyJCE3%zkq!hxd-uTPH?f
+```
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
