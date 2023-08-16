@@ -17,12 +17,12 @@ export const generateStaticParams = async () => {
     try {
         const categories = await directus.items("category").readByQuery({
             filter: {
-                status: {
-                    _eq: 'published'
-                }
+              status: {
+                _eq: "published",
+              },
             },
-            fields: ['slug']
-        })
+            fields: ["slug"],
+          });
         const params = categories?.data?.map((category) => {
             return {
                 category: category.slug as string,
