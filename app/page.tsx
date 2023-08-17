@@ -16,27 +16,26 @@ async function getData() {
         'category.title'
       ]
     })
+    console.log("🚀", posts)
 
     return posts.data;
   } catch (error) {
-    console.log(error)
     throw new Error("Error fetching posts")
   }
 }
 
 export default async function Home() {
   const posts = await getData();
-  console.log("🚀 ~ file: page.tsx:29 ~ Home ~ posts:", posts)
 
   if (!posts) return notFound();
   return (
     <PaddingContainer>
       <main className='space-y-10'>
         <PostCard post={posts[0]} />
-        <PostList posts={DUMMY_POSTS.filter((_post, index) => index > 0 && index < 3)} />
+        <PostList posts={posts.filter((_post, index) => index > 0 && index < 3)} />
         <CtaCard />
-        <PostCard reverse post={DUMMY_POSTS[3]} />
-        <PostList posts={DUMMY_POSTS.filter((_post, index) => index > 3 && index < 6)} />
+        <PostCard reverse post={posts[3]} />
+        <PostList posts={posts.filter((_post, index) => index > 3 && index < 6)} />
       </main>
     </PaddingContainer>
   );

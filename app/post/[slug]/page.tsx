@@ -10,35 +10,34 @@ interface ISlugProps {
     params: { slug: string }
 }
 
-// export const generateStaticParams = async () => {
-//     // return DUMMY_POSTS.map((post) => {
-//     //     return {
-//     //         slug: post.slug
-//     //     }
-//     // })
+export const generateStaticParams = async () => {
+    // return DUMMY_POSTS.map((post) => {
+    //     return {
+    //         slug: post.slug
+    //     }
+    // })
 
-//     try {
-//         const posts = await directus.items('post').readByQuery({
-//             filter: {
-//                 status: {
-//                     _eq: 'published'
-//                 }
-//             },
-//             fields: ['slug']
-//         });
+    try {
+        const posts = await directus.items('post').readByQuery({
+            filter: {
+                status: {
+                    _eq: 'published'
+                }
+            },
+            fields: ['slug']
+        });
 
-//         const params = posts?.data?.map((post) => {
-//             return {
-//                 slug: post.slug as string
-//             }
-//         })
+        const params = posts?.data?.map((post) => {
+            return {
+                slug: post.slug as string
+            }
+        })
 
-//         return params || []
-//     } catch (error) {
-//         console.log(error)
-//         throw new Error("Error fetching post page")
-//     }
-// }
+        return params || []
+    } catch (error) {
+        throw new Error("Error fetching post page")
+    }
+}
 
 const SlugPage = async ({ params }: ISlugProps) => {
     // const post = DUMMY_POSTS.find((post) => post.slug === params.slug)
@@ -56,7 +55,6 @@ const SlugPage = async ({ params }: ISlugProps) => {
 
             return post?.data?.[0]
         } catch (error) {
-            console.log(error)
             throw new Error("Error fetching Slug Page");
 
         }

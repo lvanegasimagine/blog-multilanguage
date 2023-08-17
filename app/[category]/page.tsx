@@ -7,34 +7,34 @@ import { notFound } from 'next/navigation'
 
 interface ICategoryProps { params: { category: string } }
 
-// export const generateStaticParams = async () => {
-//     // return DUMMY_CATEGORIES.map((category) => {
-//     //     return {
-//     //         category: category.slug
-//     //     }
-//     // })
+export const generateStaticParams = async () => {
+    // return DUMMY_CATEGORIES.map((category) => {
+    //     return {
+    //         category: category.slug
+    //     }
+    // })
 
-//     try {
-//         const categories = await directus.items("category").readByQuery({
-//             filter: {
-//               status: {
-//                 _eq: "published",
-//               },
-//             },
-//             fields: ["slug"],
-//           });
-//         const params = categories?.data?.map((category) => {
-//             return {
-//                 category: category.slug as string,
-//             }
-//         })
+    try {
+        const categories = await directus.items("category").readByQuery({
+            filter: {
+                status: {
+                    _eq: "published",
+                },
+            },
+            fields: ["slug"],
+        });
+        const params = categories?.data?.map((category) => {
+            return {
+                category: category.slug as string,
+            }
+        })
 
-//         return params || []
-//     } catch (error) {
-//         throw new Error("Error fetching category");
+        return params || []
+    } catch (error) {
+        throw new Error("Error fetching category");
 
-//     }
-// }
+    }
+}
 
 const CategoryPage = async ({ params }: ICategoryProps) => {
     // const category = DUMMY_CATEGORIES.find((category) => category.slug === params.category)
@@ -52,7 +52,6 @@ const CategoryPage = async ({ params }: ICategoryProps) => {
             });
             return category?.data?.[0]
         } catch (error) {
-            console.log(error)
             throw new Error("Error Fetching category data")
         }
     }
@@ -67,8 +66,8 @@ const CategoryPage = async ({ params }: ICategoryProps) => {
         slug: string;
         posts: Post[];
     }
+    console.log("🚀", typeCorrectedCategory)
 
-    console.log(typeCorrectedCategory.posts)
     return (
         <PaddingContainer>
             <div className='mb-10'>
