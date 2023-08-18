@@ -7,7 +7,7 @@ import directus from '@/lib/directus';
 import { notFound } from 'next/navigation';
 
 interface ISlugProps {
-    params: { slug: string }
+    params: { slug: string, lang: string }
 }
 
 export const generateStaticParams = async () => {
@@ -18,46 +18,86 @@ export const generateStaticParams = async () => {
     // })
 
     try {
-        const posts = await directus.items('post').readByQuery({
-            filter: {
-                status: {
-                    _eq: 'published'
-                }
+        const posts = await directus.items("post").readByQuery({
+          filter: {
+            status: {
+              _eq: "published",
             },
-            fields: ['slug']
+          },
+          fields: ["slug"],
         });
-
+    
         const params = posts?.data?.map((post) => {
-            return {
-                slug: post.slug as string
-            }
-        })
-
-        return params || []
-    } catch (error) {
-        throw new Error("Error fetching post page")
-    }
+          return {
+            slug: post.slug as string,
+            lang: "en",
+          };
+        });
+    
+        const localisedParams = posts?.data?.map((post) => {
+          return {
+            slug: post.slug as string,
+            lang: "de",
+          };
+        });
+    
+        // Concat Localised and Regular Params
+        const allParams = params?.concat(localisedParams ?? []);
+    
+        return allParams || [];
+      } catch (error) {
+        console.log(error);
+        throw new Error("Error fetching posts");
+      }
 }
 
 const SlugPage = async ({ params }: ISlugProps) => {
     // const post = DUMMY_POSTS.find((post) => post.slug === params.slug)
+    const locale = params.lang;
+
 
     const getPostData = async () => {
         try {
-            const post = await directus.items('post').readByQuery({
-                filter: {
-                    slug: {
-                        _eq: params.slug
-                    }
+            const post = await directus.items("post").readByQuery({
+              filter: {
+                slug: {
+                  _eq: params.slug,
                 },
-                fields: ['*', 'category.id', 'category.title', 'author.id', 'author.first_name', 'author.last_name']
-            })
-
-            return post?.data?.[0]
-        } catch (error) {
-            throw new Error("Error fetching Slug Page");
-
-        }
+              },
+              fields: [
+                "*",
+                "category.id",
+                "category.title",
+                "auhtor.id",
+                "author.first_name",
+                "author.last_name",
+                "translations.*",
+                "category.translations.*",
+              ],
+            });
+        
+            const postData = post?.data?.[0];
+        
+            if (locale === "en") {
+              return postData;
+            } else {
+              const localisedPostData = {
+                ...postData,
+                title: postData?.translations?.[0]?.title,
+                description: postData?.translations?.[0]?.description,
+                body: postData?.translations?.[0]?.body,
+                category: {
+                  ...postData?.category,
+                  title: postData?.category?.translations?.[0]?.title,
+                },
+              };
+        
+              return localisedPostData;
+            }
+          } catch (error) {
+            console.log(error);
+            throw new Error("Error fetching post");
+          }
     }
 
     const post = await getPostData();
@@ -66,7 +106,7 @@ const SlugPage = async ({ params }: ISlugProps) => {
     return (
         <PaddingContainer>
             <div className='space-y-10'>
-                <PostHero post={post} />
+                <PostHero locale={locale }post={post} />
                 <div className='mt-10 flex gap-10 flex-col md:flex-row'>
                     <div className='relative'>
                         <div className='sticky top-20 items-center flex md:flex-col gap-5'>
@@ -91,7 +131,7 @@ const SlugPage = async ({ params }: ISlugProps) => {
                     </div>
                     <PostBody body={post.body} />
                 </div>
-                <CtaCard />
+                <CtaCard locale={locale} />
             </div>
         </PaddingContainer>
     )

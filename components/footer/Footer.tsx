@@ -3,15 +3,17 @@ import { PaddingContainer } from '../layout'
 import siteConfig from '../config/site'
 import Link from 'next/link'
 import SocialLinks from '../elements/socialLinks/SocialLinks'
+import { getDictionary } from '@/lib/getDictionary'
 
+const Footer = async ({ locale }: { locale: string }) => {
+    const dictionary = await getDictionary(locale);
 
-const Footer = () => {
     return (
         <div className='py-8 border-t mt-10'>
             <PaddingContainer>
                 <div>
                     <h2 className='text-3xl font-bold'>{siteConfig.siteName}</h2>
-                    <p className='max-w-md mt-2 text-lg text-neutral-700'>{siteConfig.description}</p>
+                    <p className='max-w-md mt-2 text-lg text-neutral-700'>{dictionary.footer.description}</p>
                 </div>
                 <div className='flex flex-wrap justify-between gap-4 mt-6'>
                     <div>
@@ -26,7 +28,7 @@ const Footer = () => {
                         </div>
                     </div>
                     <div>
-                        <div className="text-sm text-neutral-400">Currently At</div>
+                        <div className="text-sm text-neutral-400">{dictionary.footer.currentlyAtText}</div>
                         <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-md shadow-md">
                             <div className="w-2 h-2 rounded-full bg-emerald-400" />
                             {siteConfig.currentlyAt}
@@ -34,8 +36,8 @@ const Footer = () => {
                     </div>
                 </div>
                 <div className='border-t py-3 flex items-center gap-4 flex-wrap justify-between mt-16'>
-                    <div className='text-sm text-neutral-400'>All rights area reserverd | Copyright {new Date().getFullYear()}</div>
-                    <div className='text-sm'>Made with love by <Link className='underline underline-offset-4' href='https://github.com/lvanegasimagine'>@lvanegas</Link> </div>
+                    <div className='text-sm text-neutral-400'>{dictionary.footer.rightsText} {new Date().getFullYear()}</div>
+                    <div className='text-sm'>{dictionary.footer.creatorText} <Link className='underline underline-offset-4' href='https://github.com/lvanegasimagine'>@lvanegas</Link> </div>
                 </div>
             </PaddingContainer>
         </div>

@@ -4,13 +4,14 @@ import { PostContent } from '.'
 import Image from 'next/image'
 
 interface IPostHeroProps {
-    post: Post
+    post: Post,
+    locale: string
 }
 
-const PostHero = ({ post }: IPostHeroProps) => {
+const PostHero = ({ post, locale }: IPostHeroProps) => {
     return (
         <div>
-            <PostContent isPostPage post={post} />
+            <PostContent locale={locale} isPostPage post={post} />
             <Image
                 src={`${process.env.NEXT_PUBLIC_ASSETS_URL}${post.image}?key=optimised`}
                 alt={post.title}

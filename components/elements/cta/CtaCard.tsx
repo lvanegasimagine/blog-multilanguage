@@ -1,9 +1,12 @@
 import directus from '@/lib/directus'
+import { getDictionary } from '@/lib/getDictionary'
 import { revalidatePath } from 'next/cache'
 import Image from 'next/image'
 import React from 'react'
 
-const CtaCard = async () => {
+const CtaCard = async ({ locale }: { locale: string }) => {
+
+    const dictionary = await getDictionary(locale)
 
     const formAction = async (formData: FormData) => {
         'use server'
@@ -17,11 +20,6 @@ const CtaCard = async () => {
             console.log(error)
         }
     }
-
-    // const subscribersCount = await fetch(`${process.env.NEXT_PUBLIC_API_URL}items/subscribers?meta=total_count&access_token=${process.env.ADMIN_TOKEN}`)
-    //     .then((res) => res.json())
-    //     .then((res) => res.meta.total.total_count)
-    //     .catch((error) => console.log(error))
 
     const subscribersCount = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}items/subscribers?meta=total_count&access_token=${process.env.ADMIN_TOKEN}`,
@@ -48,25 +46,25 @@ const CtaCard = async () => {
             <div className="relative z-20">
                 <div className="text-lg font-medium">#exploretheworld</div>
                 <h3 className="mt-3 text-4xl font-semibold">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, provident!
+                    {dictionary.ctaCard.title}
                 </h3>
                 <p className="max-w-lg mt-2 text-lg">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eius sit consequuntur perferendis omnis temporibus? Doloremque nisi aperiam saepe quasi deleniti.
+                    {dictionary.ctaCard.description}
                 </p>
                 <form className='flex items-center gap-2 mt-6 w-full' action={formAction} key={subscribersCount + 'subscribers-form'}>
                     <input
                         type="email"
                         name='email'
                         className='w-full px-3 py-2 text-base rounded-md outline-none md:w-auto placeholder:text-sm bg-white/80 focus:ring-2 ring-neutral-600'
-                        placeholder='Write your email'
+                        placeholder={dictionary.ctaCard.placeholder}
                     />
                     <button
                         type="submit"
                         className="px-3 py-2 rounded-md whitespace-nowrap bg-neutral-900 text-neutral-200"
-                    >Sign up</button>
+                    >{dictionary.ctaCard.button}</button>
                 </form>
 
-                <div className='mt-5 text-neutral-700'>Joint our <span className='px-2 py-1 rounded-md bg-neutral-700 text-neutral-100'>{subscribersCount}</span> subscribers now!</div>
+                <div className='mt-5 text-neutral-700'>{dictionary.ctaCard.subscriberText1} <span className='px-2 py-1 rounded-md bg-neutral-700 text-neutral-100'>{subscribersCount}</span> {dictionary.ctaCard.subscriberText2}</div>
             </div>
         </div>
     )
